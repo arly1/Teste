@@ -2,119 +2,62 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Minhas Chaves Pix</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg: #000;
-      --fg: #fff;
-      --accent: #00ffe0;
+      --text: #fff;
+      --accent: #00fff7;
+      --card-bg: #111;
     }
 
-    body[data-theme="stars"] {
-      background: #000 url('data:image/svg+xml;utf8,<svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="1" cy="1" r="1" fill="white" /><circle cx="30" cy="40" r="0.8" fill="white" /><circle cx="80" cy="90" r="0.6" fill="white" /></svg>') repeat;
+    body.theme-stars {
+      background: #000 url('https://www.transparenttextures.com/patterns/stardust.png') repeat;
+      animation: starsMove 60s linear infinite;
+    }
+
+    @keyframes starsMove {
+      from { background-position: 0 0; }
+      to { background-position: 1000px 1000px; }
     }
 
     body {
       margin: 0;
-      background: var(--bg);
-      color: var(--fg);
-      font-family: 'Segoe UI', sans-serif;
-      transition: background 0.4s ease, color 0.4s ease;
-    }
-
-    header {
-      text-align: center;
-      padding: 2rem 1rem;
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      transition: background 0.5s ease, color 0.5s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px;
     }
 
     h1 {
-      font-size: 1.8rem;
-      margin: 0;
+      font-size: 2em;
+      margin-bottom: 10px;
       color: var(--accent);
     }
 
-    .container {
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 1rem;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 1.5rem;
-    }
-
-    .card {
-      background: #111;
-      border-radius: 16px;
-      padding: 1.2rem;
-      text-align: center;
-      box-shadow: 0 0 10px rgba(0, 255, 224, 0.1);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 0 16px rgba(0, 255, 224, 0.2);
-    }
-
-    .qr-container {
-      margin: 0 auto 1rem;
-      cursor: pointer;
-      transition: transform 0.2s ease;
-    }
-
-    .qr-container:hover {
-      transform: scale(1.05);
-    }
-
-    .qr {
-      width: 120px;
-      height: 120px;
-      border-radius: 12px;
-      background: white;
-      display: inline-block;
-    }
-
-    .key-label {
-      font-size: 0.85rem;
-      color: #ccc;
-      margin-top: 0.5rem;
-    }
-
-    .pix-key {
-      word-break: break-word;
-      margin: 0.5rem 0 1rem;
-      font-size: 0.95rem;
-    }
-
-    button {
-      background: var(--accent);
-      border: none;
-      color: #000;
-      padding: 8px 14px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: 600;
-      transition: background 0.3s ease;
-    }
-
-    button:hover {
-      background: #00ccb0;
-    }
-
-    .theme-toggle {
-      position: fixed;
-      top: 20px;
-      right: 20px;
+    .switch-wrapper {
       display: flex;
       align-items: center;
-      gap: 10px;
+      margin-bottom: 30px;
+    }
+
+    .switch-label {
+      margin-right: 10px;
+      font-size: 0.9em;
+      color: #888;
     }
 
     .switch {
       position: relative;
-      width: 50px;
-      height: 26px;
+      display: inline-block;
+      width: 52px;
+      height: 28px;
     }
 
     .switch input {
@@ -125,125 +68,214 @@
 
     .slider {
       position: absolute;
-      top: 0; left: 0;
-      right: 0; bottom: 0;
-      background-color: #555;
-      border-radius: 50px;
       cursor: pointer;
-      transition: background 0.3s ease;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: #444;
+      transition: 0.4s;
+      border-radius: 30px;
     }
 
-    .slider::before {
-      content: "";
+    .slider:before {
       position: absolute;
-      height: 20px;
-      width: 20px;
-      left: 3px;
-      top: 3px;
-      background: white;
-      border-radius: 50%;
-      transition: transform 0.3s ease;
-    }
-
-    input:checked + .slider {
+      content: '✨';
+      height: 22px;
+      width: 22px;
+      left: 4px;
+      bottom: 3px;
       background-color: var(--accent);
+      transition: 0.4s;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      box-shadow: 0 0 10px var(--accent);
     }
 
-    input:checked + .slider::before {
+    .switch input:checked + .slider {
+      background-color: #888;
+    }
+
+    .switch input:checked + .slider:before {
       transform: translateX(24px);
+      content: '🌙';
+      background-color: #fff;
+      color: #000;
+      box-shadow: 0 0 8px #fff;
+    }
+
+    .container {
+      display: grid;
+      gap: 24px;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      width: 100%;
+      max-width: 1000px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 4px 20px rgba(0, 255, 247, 0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 30px rgba(0, 255, 247, 0.3);
+    }
+
+    .qr img {
+      width: 150px;
+      height: 150px;
+      border-radius: 8px;
+      transition: transform 0.2s ease;
+    }
+
+    .qr img:hover {
+      transform: scale(1.05);
+    }
+
+    .key-label {
+      color: #aaa;
+      font-size: 0.9em;
+      margin-top: 10px;
+    }
+
+    .pix-key {
+      font-size: 1em;
+      margin: 6px 0 10px;
+      word-break: break-all;
+    }
+
+    button {
+      background: var(--accent);
+      color: #000;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background 0.3s, transform 0.2s;
+      box-shadow: 0 0 10px var(--accent);
+    }
+
+    button:hover {
+      background: #00cfc7;
+      transform: scale(1.03);
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #222;
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px #000;
+      opacity: 0;
+      transition: opacity 0.4s;
+      z-index: 999;
+      font-size: 0.9em;
+    }
+
+    .toast.show {
+      opacity: 1;
     }
 
     footer {
-      text-align: center;
-      font-size: 0.8rem;
-      margin: 2rem 0;
-      color: #777;
+      margin-top: 40px;
+      font-size: 0.8em;
+      color: #666;
     }
   </style>
 </head>
 <body>
-  <header>
-    <h1>Minhas Chaves Pix</h1>
-  </header>
+  <h1>Minhas Chaves Pix</h1>
 
-  <div class="theme-toggle">
+  <div class="switch-wrapper">
+    <div class="switch-label">Estrelas</div>
     <label class="switch">
-      <input type="checkbox" id="themeSwitcher">
+      <input type="checkbox" id="themeSwitch">
       <span class="slider"></span>
     </label>
   </div>
 
-  <main class="container">
-    <!-- Exemplo de chave Pix -->
+  <div class="container">
+
+    <!-- E-mail -->
     <div class="card">
-      <div class="qr-container" onclick="showQR(this, 'pix+email+teste%40pix.com')">
-        <div class="qr"></div>
+      <div class="qr">
+        <a href="https://api.qrserver.com/v1/create-qr-code/?data=teste@pix.com&size=150x150" target="_blank">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?data=teste@pix.com&size=150x150" alt="QR Pix E-mail">
+        </a>
       </div>
       <div class="key-label">Chave E-mail</div>
       <div class="pix-key">teste@pix.com</div>
       <button onclick="copyToClipboard('teste@pix.com')">Copiar</button>
     </div>
 
+    <!-- Telefone -->
     <div class="card">
-      <div class="qr-container" onclick="showQR(this, '+55+11+91234-5678')">
-        <div class="qr"></div>
+      <div class="qr">
+        <a href="https://api.qrserver.com/v1/create-qr-code/?data=+5511912345678&size=150x150" target="_blank">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?data=+5511912345678&size=150x150" alt="QR Pix Telefone">
+        </a>
       </div>
       <div class="key-label">Chave Telefone</div>
       <div class="pix-key">+55 11 91234-5678</div>
       <button onclick="copyToClipboard('+55 11 91234-5678')">Copiar</button>
     </div>
 
+    <!-- CPF -->
     <div class="card">
-      <div class="qr-container" onclick="showQR(this, '123.456.789-00')">
-        <div class="qr"></div>
+      <div class="qr">
+        <a href="https://api.qrserver.com/v1/create-qr-code/?data=123.456.789-00&size=150x150" target="_blank">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?data=123.456.789-00&size=150x150" alt="QR Pix CPF">
+        </a>
       </div>
       <div class="key-label">Chave CPF</div>
       <div class="pix-key">123.456.789-00</div>
       <button onclick="copyToClipboard('123.456.789-00')">Copiar</button>
     </div>
 
+    <!-- Aleatória -->
     <div class="card">
-      <div class="qr-container" onclick="showQR(this, '00f3b2d4-9d88-4a11-b7a3-123456789abc')">
-        <div class="qr"></div>
+      <div class="qr">
+        <a href="https://api.qrserver.com/v1/create-qr-code/?data=00f3b2d4-9d88-4a11-b7a3-123456789abc&size=150x150" target="_blank">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?data=00f3b2d4-9d88-4a11-b7a3-123456789abc&size=150x150" alt="QR Pix Aleatória">
+        </a>
       </div>
       <div class="key-label">Chave Aleatória</div>
       <div class="pix-key">00f3b2d4-9d88-4a11-b7a3-123456789abc</div>
       <button onclick="copyToClipboard('00f3b2d4-9d88-4a11-b7a3-123456789abc')">Copiar</button>
     </div>
-  </main>
 
-  <footer>Interface minimalista com 💙</footer>
+  </div>
+
+  <footer>
+    Interface feita com 💙 para brilhar até no escuro.
+  </footer>
+
+  <div id="toast" class="toast">Chave Pix copiada!</div>
 
   <script>
+    const switchEl = document.getElementById("themeSwitch");
+    const toast = document.getElementById("toast");
+
+    switchEl.addEventListener("change", () => {
+      document.body.classList.toggle("theme-stars");
+    });
+
     function copyToClipboard(text) {
       navigator.clipboard.writeText(text).then(() => {
-        alert("Chave Pix copiada!");
+        toast.classList.add("show");
+        setTimeout(() => toast.classList.remove("show"), 2000);
       });
     }
-
-    function showQR(container, value) {
-      const qrDiv = container.querySelector(".qr");
-      const img = document.createElement("img");
-      img.src = `https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(value)}&size=150x150`;
-      img.width = 120;
-      img.height = 120;
-      qrDiv.innerHTML = "";
-      qrDiv.appendChild(img);
-    }
-
-    // Modo noturno automático (entre 18h e 6h usa tema escuro OLED)
-    window.addEventListener("load", () => {
-      const hour = new Date().getHours();
-      if (hour >= 18 || hour < 6) {
-        document.body.style.setProperty("--bg", "#000");
-        document.body.style.setProperty("--fg", "#fff");
-      }
-    });
-
-    // Alternância manual para tema estrelado
-    document.getElementById("themeSwitcher").addEventListener("change", (e) => {
-      document.body.dataset.theme = e.target.checked ? "stars" : "";
-    });
   </script>
 </body>
 </html>
