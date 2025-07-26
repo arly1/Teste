@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Minhas Chaves Pix</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap');
+    body {
+      margin: 0;
+      background: radial-gradient(circle at top, #0f0f1f, #000010);
+      font-family: 'Orbitron', sans-serif;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+      font-size: 2em;
+      color: #00fff7;
+      text-shadow: 0 0 8px #00fff7;
+    }
+
+    .container {
+      display: grid;
+      gap: 20px;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      width: 100%;
+      max-width: 1000px;
+    }
+
+    .card {
+      background: #111122;
+      border: 2px solid #00fff7;
+      border-radius: 20px;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 0 20px rgba(0, 255, 247, 0.3);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 0 30px rgba(0, 255, 247, 0.6);
+    }
+
+    .qr {
+      width: 150px;
+      height: 150px;
+      margin: 0 auto 10px;
+      background: white;
+      border-radius: 10px;
+    }
+
+    .key-label {
+      color: #aaa;
+      margin-bottom: 5px;
+      font-size: 0.9em;
+    }
+
+    .pix-key {
+      font-size: 1em;
+      word-break: break-word;
+      margin-bottom: 10px;
+    }
+
+    button {
+      background: #00fff7;
+      color: #000;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      box-shadow: 0 0 10px #00fff7;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background: #00cfc7;
+    }
+
+    footer {
+      margin-top: 40px;
+      font-size: 0.8em;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+  <h1>Minhas Chaves Pix</h1>
+  <div class="container">
+
+    <!-- Chave E-mail -->
+    <div class="card">
+      <div class="qr">
+        <img src="https://api.qrserver.com/v1/create-qr-code/?data=pix+email+teste%40pix.com&size=150x150" alt="QR Pix E-mail" width="150" height="150">
+      </div>
+      <div class="key-label">Chave E-mail</div>
+      <div class="pix-key">teste@pix.com</div>
+      <button onclick="copyToClipboard('teste@pix.com')">Copiar</button>
+    </div>
+
+    <!-- Chave Telefone -->
+    <div class="card">
+      <div class="qr">
+        <img src="https://api.qrserver.com/v1/create-qr-code/?data=+55+11+91234-5678&size=150x150" alt="QR Pix Telefone" width="150" height="150">
+      </div>
+      <div class="key-label">Chave Telefone</div>
+      <div class="pix-key">+55 11 91234-5678</div>
+      <button onclick="copyToClipboard('+55 11 91234-5678')">Copiar</button>
+    </div>
+
+    <!-- Chave CPF -->
+    <div class="card">
+      <div class="qr">
+        <img src="https://api.qrserver.com/v1/create-qr-code/?data=123.456.789-00&size=150x150" alt="QR Pix CPF" width="150" height="150">
+      </div>
+      <div class="key-label">Chave CPF</div>
+      <div class="pix-key">123.456.789-00</div>
+      <button onclick="copyToClipboard('123.456.789-00')">Copiar</button>
+    </div>
+
+    <!-- Chave Aleatória -->
+    <div class="card">
+      <div class="qr">
+        <img src="https://api.qrserver.com/v1/create-qr-code/?data=00f3b2d4-9d88-4a11-b7a3-123456789abc&size=150x150" alt="QR Pix Aleatória" width="150" height="150">
+      </div>
+      <div class="key-label">Chave Aleatória</div>
+      <div class="pix-key">00f3b2d4-9d88-4a11-b7a3-123456789abc</div>
+      <button onclick="copyToClipboard('00f3b2d4-9d88-4a11-b7a3-123456789abc')">Copiar</button>
+    </div>
+
+  </div>
+
+  <footer>
+    Interface personalizada com amor 🌀
+  </footer>
+
+  <script>
+    function copyToClipboard(text) {
+      navigator.clipboard.writeText(text).then(() => {
+        alert("Chave Pix copiada!");
+      });
+    }
+  </script>
+</body>
+</html>
