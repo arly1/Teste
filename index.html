@@ -51,38 +51,36 @@
         0 0 8px #00fff7,
         0 0 20px #00fff7;
       position: relative;
-      overflow: visible;
+      overflow: hidden; /* Changed to hidden to clip the QR code if it overflows */
     }
 
-    /* Logo Pix circular no centro */
+    /* Logo Pix SVG no centro */
     #logo-pix {
       position: absolute;
       top: 50%;
       left: 50%;
-      width: 64px;
-      height: 64px;
-      margin-left: -32px;
-      margin-top: -32px;
-      border-radius: 50%;
-      background: radial-gradient(circle at center, #00fff7 0%, #009eaa 80%);
-      box-shadow:
-        0 0 10px #00fff7,
-        0 0 30px #00fff7;
-      animation: pulse 2.5s infinite ease-in-out;
+      width: 64px; /* Adjust size as needed */
+      height: 64px; /* Adjust size as needed */
+      margin-left: -32px; /* Half of width */
+      margin-top: -32px; /* Half of height */
       pointer-events: none;
       z-index: 10;
+      filter: drop-shadow(0 0 5px #00fff7) drop-shadow(0 0 15px #00fff7);
+      animation: pulse 2.5s infinite ease-in-out;
+    }
+
+    #logo-pix svg {
+      width: 100%;
+      height: 100%;
+      fill: #00fff7; /* Color of the Pix logo */
     }
 
     @keyframes pulse {
       0%, 100% {
-        box-shadow:
-          0 0 10px #00fff7,
-          0 0 30px #00fff7;
+        filter: drop-shadow(0 0 5px #00fff7) drop-shadow(0 0 15px #00fff7);
       }
       50% {
-        box-shadow:
-          0 0 20px #00fff7,
-          0 0 50px #00fff7;
+        filter: drop-shadow(0 0 10px #00fff7) drop-shadow(0 0 25px #00fff7);
       }
     }
 
@@ -190,7 +188,11 @@
 
   <div class="card">
     <div id="custom-qr"></div>
-    <div id="logo-pix" title="Logo Pix"></div>
+    <div id="logo-pix" title="Logo Pix">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M11.996 0C5.372 0 0 5.372 0 12s5.372 12 12 12 12-5.372 12-12-5.372-12-12-12zm4.187 18.271h-1.574l-2.072-4.145c-.104-.207-.208-.415-.208-.622 0-.208.104-.415.208-.622l2.072-4.145h1.574L11.5 12l4.683 6.271zM7.5 5.729h1.574l2.072 4.145c.104.207.208.415.208.622 0 .208-.104.415-.208.622l-2.072 4.145H7.5L12.5 12 7.5 5.729z"/>
+      </svg>
+    </div>
     <div class="pix-key" id="pix-key">arlybom10@gmail.com</div>
     <button onclick="copyToClipboard()">Copiar</button>
   </div>
