@@ -1,204 +1,249 @@
-<!DOCTYPE html><html lang="pt-BR">
+<!DOCTYPE html>
+<html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Minhas Chaves Pix</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=DM+Sans&display=swap');:root {
-  --bg-oled: #000000;
-  --bg-stars: #000000 url('data:image/svg+xml;utf8,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><circle cx="2" cy="2" r="1" fill="white"/><circle cx="40" cy="20" r="1" fill="white"/><circle cx="70" cy="80" r="1" fill="white"/></svg>') repeat;
-  --card-color: #111111;
-  --text-color: #f0f0f0;
-  --accent: #00ffc3;
-}
+    :root {
+      --bg: #000;
+      --fg: #fff;
+      --accent: #00ffe0;
+    }
 
-body {
-  margin: 0;
-  padding: 40px 20px;
-  background: var(--bg-oled);
-  font-family: 'DM Sans', sans-serif;
-  color: var(--text-color);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  transition: background 0.5s ease;
-}
+    body[data-theme="stars"] {
+      background: #000 url('data:image/svg+xml;utf8,<svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="1" cy="1" r="1" fill="white" /><circle cx="30" cy="40" r="0.8" fill="white" /><circle cx="80" cy="90" r="0.6" fill="white" /></svg>') repeat;
+    }
 
-.theme-switch {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-}
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: 'Segoe UI', sans-serif;
+      transition: background 0.4s ease, color 0.4s ease;
+    }
 
-.switch {
-  position: relative;
-  display: inline-block;
-  width: 50px;
-  height: 26px;
-}
+    header {
+      text-align: center;
+      padding: 2rem 1rem;
+    }
 
-.switch input {
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
+    h1 {
+      font-size: 1.8rem;
+      margin: 0;
+      color: var(--accent);
+    }
 
-.slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #444;
-  transition: .4s;
-  border-radius: 30px;
-}
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 1rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.5rem;
+    }
 
-.slider:before {
-  position: absolute;
-  content: "";
-  height: 20px;
-  width: 20px;
-  left: 3px;
-  bottom: 3px;
-  background-color: white;
-  transition: .4s;
-  border-radius: 50%;
-}
+    .card {
+      background: #111;
+      border-radius: 16px;
+      padding: 1.2rem;
+      text-align: center;
+      box-shadow: 0 0 10px rgba(0, 255, 224, 0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
 
-input:checked + .slider {
-  background-color: #00ffc3;
-}
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 0 16px rgba(0, 255, 224, 0.2);
+    }
 
-input:checked + .slider:before {
-  transform: translateX(24px);
-}
+    .qr-container {
+      margin: 0 auto 1rem;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
 
-h1 {
-  margin-bottom: 40px;
-  font-size: 1.8rem;
-  font-weight: 500;
-  color: var(--accent);
-}
+    .qr-container:hover {
+      transform: scale(1.05);
+    }
 
-.container {
-  display: grid;
-  gap: 24px;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  width: 100%;
-  max-width: 960px;
-  animation: fadeIn 1s ease;
-}
+    .qr {
+      width: 120px;
+      height: 120px;
+      border-radius: 12px;
+      background: white;
+      display: inline-block;
+    }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
+    .key-label {
+      font-size: 0.85rem;
+      color: #ccc;
+      margin-top: 0.5rem;
+    }
 
-.card {
-  background: var(--card-color);
-  border-radius: 14px;
-  padding: 20px;
-  text-align: center;
-  transition: transform 0.2s ease;
-}
+    .pix-key {
+      word-break: break-word;
+      margin: 0.5rem 0 1rem;
+      font-size: 0.95rem;
+    }
 
-.card:hover {
-  transform: translateY(-3px);
-}
+    button {
+      background: var(--accent);
+      border: none;
+      color: #000;
+      padding: 8px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background 0.3s ease;
+    }
 
-.key-label {
-  font-size: 0.9rem;
-  color: #aaa;
-  margin-bottom: 4px;
-}
+    button:hover {
+      background: #00ccb0;
+    }
 
-.pix-key {
-  font-size: 1rem;
-  word-break: break-word;
-  margin-bottom: 12px;
-}
+    .theme-toggle {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
 
-button {
-  background: var(--accent);
-  color: #000;
-  border: none;
-  padding: 8px 14px;
-  border-radius: 6px;
-  font-weight: 600;
-  cursor: pointer;
-  font-size: 0.9rem;
-  transition: background 0.3s;
-  margin: 5px;
-}
+    .switch {
+      position: relative;
+      width: 50px;
+      height: 26px;
+    }
 
-button:hover {
-  background: #00ddb0;
-}
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
 
-.qr-popup {
-  display: none;
-  position: fixed;
-  top: 0; left: 0;
-  width: 100vw; height: 100vh;
-  background: rgba(0, 0, 0, 0.8);
-  backdrop-filter: blur(6px);
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
+    .slider {
+      position: absolute;
+      top: 0; left: 0;
+      right: 0; bottom: 0;
+      background-color: #555;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
 
-.qr-box {
-  background: #111;
-  padding: 20px;
-  border-radius: 10px;
-  text-align: center;
-}
+    .slider::before {
+      content: "";
+      position: absolute;
+      height: 20px;
+      width: 20px;
+      left: 3px;
+      top: 3px;
+      background: white;
+      border-radius: 50%;
+      transition: transform 0.3s ease;
+    }
 
-.qr-box img {
-  width: 200px;
-  height: 200px;
-}
+    input:checked + .slider {
+      background-color: var(--accent);
+    }
 
-footer {
-  margin-top: 60px;
-  font-size: 0.75rem;
-  color: #555;
-}
+    input:checked + .slider::before {
+      transform: translateX(24px);
+    }
 
+    footer {
+      text-align: center;
+      font-size: 0.8rem;
+      margin: 2rem 0;
+      color: #777;
+    }
   </style>
 </head>
-<body>  <div class="theme-switch">
+<body>
+  <header>
+    <h1>Minhas Chaves Pix</h1>
+  </header>
+
+  <div class="theme-toggle">
     <label class="switch">
-      <input type="checkbox" onchange="toggleStars(this)">
+      <input type="checkbox" id="themeSwitcher">
       <span class="slider"></span>
     </label>
-  </div>  <h1>Minhas Chaves Pix</h1>  <div class="container"><div class="card">
-  <div class="key-label">Chave E-mail</div>
-  <div class="pix-key" id="email">teste@pix.com</div>
-  <button onclick="copyToClipboard('email')">Copiar</button>
-  <button onclick="showQR('teste@pix.com')">Mostrar QR</button>
-</div>
+  </div>
 
-<div class="card">
-  <div class="key-label">Chave Telefone</div>
-  <div class="pix-key" id="fone">+55 11 91234-5678</div>
-  <button onclick="copyToClipboard('fone')">Copiar</button>
-  <button onclick="showQR('+55 11 91234-5678')">Mostrar QR</button>
-</div>
+  <main class="container">
+    <!-- Exemplo de chave Pix -->
+    <div class="card">
+      <div class="qr-container" onclick="showQR(this, 'pix+email+teste%40pix.com')">
+        <div class="qr"></div>
+      </div>
+      <div class="key-label">Chave E-mail</div>
+      <div class="pix-key">teste@pix.com</div>
+      <button onclick="copyToClipboard('teste@pix.com')">Copiar</button>
+    </div>
 
-<div class="card">
-  <div class="key-label">Chave CPF</div>
-  <div class="pix-key" id="cpf">123.456.789-00</div>
-  <button onclick="copyToClipboard('cpf')">Copiar</button>
-  <button onclick="showQR('123.456.789-00')">Mostrar QR</button>
-</div>
+    <div class="card">
+      <div class="qr-container" onclick="showQR(this, '+55+11+91234-5678')">
+        <div class="qr"></div>
+      </div>
+      <div class="key-label">Chave Telefone</div>
+      <div class="pix-key">+55 11 91234-5678</div>
+      <button onclick="copyToClipboard('+55 11 91234-5678')">Copiar</button>
+    </div>
 
-<div class="card">
-  <div class="key-label">Chave Aleatória</div>
-  <div class="pix-key" id="aleatoria">00f3b2d4-9d88-4a11-b7a3-123456789abc</div>
-  <button onclick="copyToClipboard('aleatoria')">Copiar</button>
-  <button onclick="showQR('00f3b2d4-9d88-4a11-b7a3-123
+    <div class="card">
+      <div class="qr-container" onclick="showQR(this, '123.456.789-00')">
+        <div class="qr"></div>
+      </div>
+      <div class="key-label">Chave CPF</div>
+      <div class="pix-key">123.456.789-00</div>
+      <button onclick="copyToClipboard('123.456.789-00')">Copiar</button>
+    </div>
 
-    
+    <div class="card">
+      <div class="qr-container" onclick="showQR(this, '00f3b2d4-9d88-4a11-b7a3-123456789abc')">
+        <div class="qr"></div>
+      </div>
+      <div class="key-label">Chave Aleatória</div>
+      <div class="pix-key">00f3b2d4-9d88-4a11-b7a3-123456789abc</div>
+      <button onclick="copyToClipboard('00f3b2d4-9d88-4a11-b7a3-123456789abc')">Copiar</button>
+    </div>
+  </main>
+
+  <footer>Interface minimalista com 💙</footer>
+
+  <script>
+    function copyToClipboard(text) {
+      navigator.clipboard.writeText(text).then(() => {
+        alert("Chave Pix copiada!");
+      });
+    }
+
+    function showQR(container, value) {
+      const qrDiv = container.querySelector(".qr");
+      const img = document.createElement("img");
+      img.src = `https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(value)}&size=150x150`;
+      img.width = 120;
+      img.height = 120;
+      qrDiv.innerHTML = "";
+      qrDiv.appendChild(img);
+    }
+
+    // Modo noturno automático (entre 18h e 6h usa tema escuro OLED)
+    window.addEventListener("load", () => {
+      const hour = new Date().getHours();
+      if (hour >= 18 || hour < 6) {
+        document.body.style.setProperty("--bg", "#000");
+        document.body.style.setProperty("--fg", "#fff");
+      }
+    });
+
+    // Alternância manual para tema estrelado
+    document.getElementById("themeSwitcher").addEventListener("change", (e) => {
+      document.body.dataset.theme = e.target.checked ? "stars" : "";
+    });
+  </script>
+</body>
+</html>
