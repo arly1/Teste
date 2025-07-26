@@ -1,183 +1,204 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
+<!DOCTYPE html><html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Minhas Chaves Pix</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=DM+Sans&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans&display=swap');:root {
+  --bg-oled: #000000;
+  --bg-stars: #000000 url('data:image/svg+xml;utf8,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><circle cx="2" cy="2" r="1" fill="white"/><circle cx="40" cy="20" r="1" fill="white"/><circle cx="70" cy="80" r="1" fill="white"/></svg>') repeat;
+  --card-color: #111111;
+  --text-color: #f0f0f0;
+  --accent: #00ffc3;
+}
 
-    :root {
-      --bg-color: #0e0e11;
-      --card-color: #1a1a1e;
-      --text-color: #f0f0f0;
-      --accent: #00ffc3;
-    }
+body {
+  margin: 0;
+  padding: 40px 20px;
+  background: var(--bg-oled);
+  font-family: 'DM Sans', sans-serif;
+  color: var(--text-color);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: background 0.5s ease;
+}
 
-    body {
-      margin: 0;
-      padding: 40px 20px;
-      background: var(--bg-color);
-      font-family: 'DM Sans', sans-serif;
-      color: var(--text-color);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
+.theme-switch {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
 
-    h1 {
-      margin-bottom: 40px;
-      font-size: 1.8rem;
-      font-weight: 500;
-      color: var(--accent);
-    }
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 26px;
+}
 
-    .container {
-      display: grid;
-      gap: 24px;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      width: 100%;
-      max-width: 960px;
-    }
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
 
-    .card {
-      background: var(--card-color);
-      border-radius: 14px;
-      padding: 20px;
-      text-align: center;
-      transition: transform 0.2s ease;
-    }
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #444;
+  transition: .4s;
+  border-radius: 30px;
+}
 
-    .card:hover {
-      transform: translateY(-3px);
-    }
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
+}
 
-    .key-label {
-      font-size: 0.9rem;
-      color: #aaa;
-      margin-bottom: 4px;
-    }
+input:checked + .slider {
+  background-color: #00ffc3;
+}
 
-    .pix-key {
-      font-size: 1rem;
-      word-break: break-word;
-      margin-bottom: 12px;
-    }
+input:checked + .slider:before {
+  transform: translateX(24px);
+}
 
-    button {
-      background: var(--accent);
-      color: #000;
-      border: none;
-      padding: 8px 14px;
-      border-radius: 6px;
-      font-weight: 600;
-      cursor: pointer;
-      font-size: 0.9rem;
-      transition: background 0.3s;
-    }
+h1 {
+  margin-bottom: 40px;
+  font-size: 1.8rem;
+  font-weight: 500;
+  color: var(--accent);
+}
 
-    button:hover {
-      background: #00ddb0;
-    }
+.container {
+  display: grid;
+  gap: 24px;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  width: 100%;
+  max-width: 960px;
+  animation: fadeIn 1s ease;
+}
 
-    .qr-popup {
-      display: none;
-      position: fixed;
-      top: 0; left: 0;
-      width: 100vw; height: 100vh;
-      background: rgba(0, 0, 0, 0.8);
-      backdrop-filter: blur(6px);
-      justify-content: center;
-      align-items: center;
-      z-index: 1000;
-    }
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
 
-    .qr-box {
-      background: #111;
-      padding: 20px;
-      border-radius: 10px;
-      text-align: center;
-    }
+.card {
+  background: var(--card-color);
+  border-radius: 14px;
+  padding: 20px;
+  text-align: center;
+  transition: transform 0.2s ease;
+}
 
-    .qr-box img {
-      width: 200px;
-      height: 200px;
-    }
+.card:hover {
+  transform: translateY(-3px);
+}
 
-    .qr-box button {
-      margin-top: 20px;
-      background: transparent;
-      border: 1px solid #fff;
-      color: #fff;
-    }
+.key-label {
+  font-size: 0.9rem;
+  color: #aaa;
+  margin-bottom: 4px;
+}
 
-    footer {
-      margin-top: 60px;
-      font-size: 0.75rem;
-      color: #555;
-    }
+.pix-key {
+  font-size: 1rem;
+  word-break: break-word;
+  margin-bottom: 12px;
+}
+
+button {
+  background: var(--accent);
+  color: #000;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background 0.3s;
+  margin: 5px;
+}
+
+button:hover {
+  background: #00ddb0;
+}
+
+.qr-popup {
+  display: none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(6px);
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.qr-box {
+  background: #111;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.qr-box img {
+  width: 200px;
+  height: 200px;
+}
+
+footer {
+  margin-top: 60px;
+  font-size: 0.75rem;
+  color: #555;
+}
+
   </style>
 </head>
-<body>
+<body>  <div class="theme-switch">
+    <label class="switch">
+      <input type="checkbox" onchange="toggleStars(this)">
+      <span class="slider"></span>
+    </label>
+  </div>  <h1>Minhas Chaves Pix</h1>  <div class="container"><div class="card">
+  <div class="key-label">Chave E-mail</div>
+  <div class="pix-key" id="email">teste@pix.com</div>
+  <button onclick="copyToClipboard('email')">Copiar</button>
+  <button onclick="showQR('teste@pix.com')">Mostrar QR</button>
+</div>
 
-  <h1>Minhas Chaves Pix</h1>
+<div class="card">
+  <div class="key-label">Chave Telefone</div>
+  <div class="pix-key" id="fone">+55 11 91234-5678</div>
+  <button onclick="copyToClipboard('fone')">Copiar</button>
+  <button onclick="showQR('+55 11 91234-5678')">Mostrar QR</button>
+</div>
 
-  <div class="container">
+<div class="card">
+  <div class="key-label">Chave CPF</div>
+  <div class="pix-key" id="cpf">123.456.789-00</div>
+  <button onclick="copyToClipboard('cpf')">Copiar</button>
+  <button onclick="showQR('123.456.789-00')">Mostrar QR</button>
+</div>
 
-    <!-- Chave E-mail -->
-    <div class="card">
-      <div class="key-label">Chave E-mail</div>
-      <div class="pix-key">teste@pix.com</div>
-      <button onclick="showQR('pix email teste@pix.com')">Mostrar QR</button>
-    </div>
+<div class="card">
+  <div class="key-label">Chave Aleatória</div>
+  <div class="pix-key" id="aleatoria">00f3b2d4-9d88-4a11-b7a3-123456789abc</div>
+  <button onclick="copyToClipboard('aleatoria')">Copiar</button>
+  <button onclick="showQR('00f3b2d4-9d88-4a11-b7a3-123
 
-    <!-- Chave Telefone -->
-    <div class="card">
-      <div class="key-label">Chave Telefone</div>
-      <div class="pix-key">+55 11 91234-5678</div>
-      <button onclick="showQR('+55 11 91234-5678')">Mostrar QR</button>
-    </div>
-
-    <!-- Chave CPF -->
-    <div class="card">
-      <div class="key-label">Chave CPF</div>
-      <div class="pix-key">123.456.789-00</div>
-      <button onclick="showQR('123.456.789-00')">Mostrar QR</button>
-    </div>
-
-    <!-- Chave Aleatória -->
-    <div class="card">
-      <div class="key-label">Chave Aleatória</div>
-      <div class="pix-key">00f3b2d4-9d88-4a11-b7a3-123456789abc</div>
-      <button onclick="showQR('00f3b2d4-9d88-4a11-b7a3-123456789abc')">Mostrar QR</button>
-    </div>
-
-  </div>
-
-  <div class="qr-popup" id="qrPopup">
-    <div class="qr-box">
-      <div id="qrImageContainer">
-        <img id="qrImage" src="" alt="QR Code">
-      </div>
-      <button onclick="closeQR()">Fechar</button>
-    </div>
-  </div>
-
-  <footer>
-    Interface minimalista • Desenvolvido com carinho 🖤
-  </footer>
-
-  <script>
-    function showQR(data) {
-      const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(data)}&size=200x200`;
-      document.getElementById('qrImage').src = qrUrl;
-      document.getElementById('qrPopup').style.display = 'flex';
-    }
-
-    function closeQR() {
-      document.getElementById('qrPopup').style.display = 'none';
-    }
-  </script>
-
-</body>
-</html>
+    
