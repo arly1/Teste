@@ -1,471 +1,217 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Galeria Pública — Portal de Imagens</title>
-  <meta name="description" content="Envie imagens, adicione título e descrição — ficam públicas para todos verem."/>
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Galeria Pública</title>
   <style>
-    :root{
-      --bg:#071027;
-      --card: rgba(255,255,255,0.04);
-      --glass: rgba(255,255,255,0.03);
-      --accent1:#7c5cff;
-      --accent2:#00d4ff;
-      --muted: rgba(255,255,255,0.6);
-      --glass-2: rgba(255,255,255,0.02);
+    :root {
+      --bg: #0d1117;
+      --text: #e6edf3;
+      --card: #161b22;
+      --accent: #58a6ff;
+      --shadow: rgba(0, 0, 0, 0.3);
     }
-    *{box-sizing:border-box}
-    html,body{height:100%;margin:0;background:
-      radial-gradient(800px 400px at 10% 10%, rgba(124,92,255,0.08), transparent),
-      radial-gradient(900px 500px at 90% 90%, rgba(0,212,255,0.03), transparent),
-      var(--bg);
-      color: #eaf0ff;
-      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-      -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale;
+
+    [data-theme="light"] {
+      --bg: #f5f7fa;
+      --text: #111;
+      --card: #ffffff;
+      --accent: #0078ff;
+      --shadow: rgba(0, 0, 0, 0.1);
     }
-    header{display:flex;align-items:center;justify-content:space-between;padding:20px 28px}
-    .brand{display:flex;gap:14px;align-items:center}
-    .logo{width:52px;height:52px;border-radius:12px;background:linear-gradient(135deg,var(--accent1),var(--accent2));display:grid;place-items:center;font-weight:800;color:#031226;box-shadow:0 10px 30px rgba(0,0,0,0.5)}
-    h1{font-size:18px;margin:0}
-    .desc{font-size:13px;color:var(--muted)}
-    .controls{display:flex;gap:10px;align-items:center}
-    .btn{padding:10px 14px;border-radius:12px;background:var(--card);border:1px solid rgba(255,255,255,0.03);cursor:pointer;font-weight:700}
-    .btn.primary{background:linear-gradient(90deg,var(--accent1),var(--accent2));color:#05142a;border:none;box-shadow:0 12px 30px rgba(124,92,255,0.12)}
-    main{padding:22px;display:grid;grid-template-columns:520px 1fr;gap:22px}
-    @media (max-width:980px){main{grid-template-columns:1fr;padding:12px}}
-    /* upload panel */
-    .panel{border-radius:14px;padding:18px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.03);box-shadow:0 10px 40px rgba(2,6,23,0.6)}
-    .drop{border:2px dashed rgba(255,255,255,0.04);padding:18px;border-radius:12px;text-align:center;cursor:pointer;transition:all .18s}
-    .drop.dragover{background:linear-gradient(90deg, rgba(124,92,255,0.06), rgba(0,212,255,0.03));transform:translateY(-3px);border-color:rgba(124,92,255,0.4)}
-    .preview{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
-    .thumb{border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,0.03);background:var(--glass-2);display:flex;align-items:center;justify-content:center;padding:8px}
-    label.field{display:block;margin-top:12px;font-size:13px;color:var(--muted)}
-    input[type="text"], textarea, select{width:100%;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,0.03);background:transparent;color:inherit;margin-top:6px}
-    textarea{min-height:88px;resize:vertical}
-    .meta-row{display:flex;gap:8px;align-items:center}
-    .progress{height:10px;border-radius:999px;background:rgba(255,255,255,0.03);overflow:hidden;margin-top:10px}
-    .progress > i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--accent1),var(--accent2));transition:width .2s}
-    .small{font-size:13px;color:var(--muted)}
-    /* gallery */
-    .gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px}
-    .card{border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,0.03);background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.01));display:flex;flex-direction:column}
-    .media{height:180px;display:block;background:#031226;object-fit:cover}
-    .meta{padding:10px;display:flex;flex-direction:column;gap:6px}
-    .meta h3{margin:0;font-size:15px}
-    .tags{display:flex;gap:6px;flex-wrap:wrap}
-    .tag{font-size:12px;padding:6px;border-radius:999px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.02)}
-    .footer{padding:18px 28px;color:var(--muted);display:flex;justify-content:space-between;align-items:center}
-    /* big hero on top of gallery */
-    .hero{padding:18px;border-radius:12px;margin-bottom:12px;display:flex;align-items:center;gap:14px}
-    .hero .head{flex:1}
-    .ghost{color:var(--muted)}
-    /* utility */
-    .muted{color:var(--muted)}
-    .center{text-align:center}
-    .hint{font-size:13px;color:var(--muted);margin-top:8px}
-    .empty{padding:18px;border-radius:12px;background:linear-gradient(180deg, rgba(0,0,0,0.06), transparent);text-align:center}
-    a.link{color:inherit;text-decoration:none;border-bottom:2px solid transparent}
-    a.link:hover{border-color:rgba(255,255,255,0.04)}
-    /* small responsive tweaks */
-    @media (max-width:700px){
-      .preview{grid-template-columns:1fr}
-      .media{height:160px}
-      header{padding:12px}
+
+    * {
+      box-sizing: border-box;
+      transition: background 0.3s, color 0.3s;
+      font-family: "Inter", sans-serif;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 24px;
+      background: var(--card);
+      box-shadow: 0 2px 8px var(--shadow);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 1.2rem;
+    }
+
+    .theme-toggle {
+      padding: 8px 14px;
+      border: none;
+      border-radius: 10px;
+      background: var(--accent);
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    main {
+      flex: 1;
+      max-width: 900px;
+      margin: 30px auto;
+      padding: 0 20px;
+    }
+
+    .upload-area {
+      background: var(--card);
+      border: 2px dashed var(--accent);
+      border-radius: 14px;
+      padding: 30px;
+      text-align: center;
+      margin-bottom: 30px;
+      cursor: pointer;
+    }
+
+    .upload-area:hover {
+      background: rgba(88, 166, 255, 0.05);
+    }
+
+    #fileInput {
+      display: none;
+    }
+
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 20px;
+    }
+
+    .img-card {
+      background: var(--card);
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 2px 10px var(--shadow);
+      transition: transform 0.3s;
+    }
+
+    .img-card:hover {
+      transform: scale(1.02);
+    }
+
+    .img-card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      display: block;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      font-size: 0.9rem;
+      color: var(--accent);
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      background: var(--card);
+    }
+
+    .empty {
+      text-align: center;
+      color: var(--accent);
+      opacity: 0.7;
+      margin-top: 40px;
     }
   </style>
 </head>
 <body>
   <header>
-    <div class="brand">
-      <div class="logo">PG</div>
-      <div>
-        <h1>Galeria Pública</h1>
-        <div class="desc">Envie imagens — públicas, simples e compartilháveis.</div>
-      </div>
-    </div>
-    <div class="controls">
-      <div id="status" class="small muted">Offline</div>
-      <button id="refreshBtn" class="btn">Atualizar</button>
-      <button id="signinBtn" class="btn">Entrar</button>
-      <button id="newUpload" class="btn primary">Novo Upload</button>
-    </div>
+    <h1>🌐 Galeria Pública</h1>
+    <button class="theme-toggle" id="themeToggle">Alternar Tema</button>
   </header>
 
   <main>
-    <!-- UPLOAD / CONTROLS -->
-    <section>
-      <div class="panel" id="uploadPanel">
-        <div class="hero">
-          <div class="head">
-            <strong style="font-size:16px">Enviar imagem</strong>
-            <div class="ghost small">Arraste, solte ou selecione arquivos — todas as imagens ficam públicas.</div>
-          </div>
-        </div>
+    <div class="upload-area" id="uploadArea">
+      <p>📸 Clique aqui ou solte uma imagem para enviar</p>
+      <input type="file" id="fileInput" accept="image/*">
+    </div>
 
-        <div id="dropzone" class="drop center" tabindex="0">
-          <div style="font-weight:700">Arraste imagens aqui</div>
-          <div class="hint">PNG, JPG, WEBP — até 10 MB por arquivo</div>
-          <input id="fileInput" type="file" accept="image/*" multiple style="display:none" />
-        </div>
-
-        <div class="preview" id="previewArea" style="display:none"></div>
-
-        <label class="field">
-          Título
-          <input id="title" type="text" placeholder="Um título curto e chamativo (opcional)">
-        </label>
-
-        <label class="field">
-          Descrição
-          <textarea id="description" placeholder="Descreva a imagem (opcional)"></textarea>
-        </label>
-
-        <label class="field">
-          Tags (separe por vírgula)
-          <input id="tags" type="text" placeholder="paisagem, retrato, natureza">
-        </label>
-
-        <div class="meta-row" style="margin-top:12px;gap:8px;align-items:center">
-          <label style="display:flex;gap:8px;align-items:center">
-            <input id="publicCheckbox" type="checkbox" checked /> <span class="small muted">Tornar público (qualquer pessoa verá)</span>
-          </label>
-          <div style="flex:1"></div>
-          <button id="uploadBtn" class="btn primary">Enviar</button>
-        </div>
-
-        <div class="progress" style="display:none;margin-top:12px"><i></i></div>
-        <div id="uploadMsg" class="hint"></div>
-        <div class="hint">Dica: Pressione <kbd>Esc</kbd> para limpar a seleção.</div>
-      </div>
-
-      <div style="height:18px"></div>
-
-      <div class="panel">
-        <strong>Como funciona</strong>
-        <p class="muted small">Esse site usa Firebase para armazenar imagens e informações da galeria. O upload gera um link público (downloadURL) salvo em um documento Firestore. Se você não configurar o Firebase, o site usa armazenamento local (localStorage) apenas para teste.</p>
-        <div style="height:10px"></div>
-        <div class="muted small">Observação de segurança: para tornar a galeria realmente pública, ajuste regras de Firebase Storage / Firestore adequadamente — instruções logo abaixo do código.</div>
-      </div>
-    </section>
-
-    <!-- GALLERY -->
-    <section>
-      <div style="display:flex;gap:12px;align-items:center;margin-bottom:12px">
-        <h2 style="margin:0">Galeria pública</h2>
-        <div class="muted small">— imagens recentes</div>
-      </div>
-
-      <div id="gallery" class="gallery-grid">
-        <div class="empty">Carregando galeria...</div>
-      </div>
-    </section>
+    <section class="gallery" id="gallery"></section>
+    <div class="empty" id="emptyMsg">Nenhuma imagem enviada ainda.</div>
   </main>
 
-  <footer class="footer">
-    <div class="muted small">Feito com carinho — personalize cores e regras do Firebase.</div>
-    <div class="muted small">Portal • Galeria</div>
+  <footer>
+    Feito com 💙 por <strong>Arly</strong>
   </footer>
 
-  <!-- Firebase CDN (compat mode scripts) -->
-  <!-- Substitua as versões se quiser; mantive compat para simplicidade -->
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-storage-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
-
   <script>
-  /*********************************************
-   * CONFIGURE AQUI o seu Firebase (substitua)
-   * Para que o site salve imagens publicamente:
-   * 1) Crie um projeto no console.firebase.google.com
-   * 2) Habilite Authentication -> Anonymous sign-in
-   * 3) Habilite Firestore e Storage
-   * 4) Ajuste as regras para permitir leitura pública (ex.: allow read: if true)
-   * 5) Cole o objeto firebaseConfig abaixo (do seu app web)
-   *********************************************/
-  const firebaseConfig = {
-    // EXEMPLO:
-    // apiKey: "SUA_API_KEY",
-    // authDomain: "seu-projeto.firebaseapp.com",
-    // projectId: "seu-projeto",
-    // storageBucket: "seu-projeto.appspot.com",
-    // messagingSenderId: "XXXXX",
-    // appId: "1:XXXXX:web:XXXXX"
-  };
+    const uploadArea = document.getElementById('uploadArea');
+    const fileInput = document.getElementById('fileInput');
+    const gallery = document.getElementById('gallery');
+    const emptyMsg = document.getElementById('emptyMsg');
+    const themeToggle = document.getElementById('themeToggle');
 
-  const useFirebase = !!(firebaseConfig && firebaseConfig.apiKey);
-
-  // UI elements
-  const statusEl = document.getElementById('status');
-  const dropzone = document.getElementById('dropzone');
-  const fileInput = document.getElementById('fileInput');
-  const previewArea = document.getElementById('previewArea');
-  const uploadBtn = document.getElementById('uploadBtn');
-  const uploadMsg = document.getElementById('uploadMsg');
-  const progressWrap = document.querySelector('.progress');
-  const progressBar = document.querySelector('.progress > i');
-  const galleryEl = document.getElementById('gallery');
-  const titleInput = document.getElementById('title');
-  const descInput = document.getElementById('description');
-  const tagsInput = document.getElementById('tags');
-  const publicCheckbox = document.getElementById('publicCheckbox');
-  const signinBtn = document.getElementById('signinBtn');
-  const refreshBtn = document.getElementById('refreshBtn');
-  const newUploadBtn = document.getElementById('newUpload');
-
-  let selectedFiles = [];
-  let db, storage, auth;
-
-  // Fallback local storage functions
-  function lsSaveImageMeta(meta) {
-    const key = 'pg_local_gallery';
-    const arr = JSON.parse(localStorage.getItem(key) || '[]');
-    arr.unshift(meta); // newest first
-    localStorage.setItem(key, JSON.stringify(arr));
-  }
-  function lsLoadGallery(){
-    return JSON.parse(localStorage.getItem('pg_local_gallery') || '[]');
-  }
-
-  // Initialize Firebase if configured
-  if (useFirebase) {
-    try {
-      firebase.initializeApp(firebaseConfig);
-      auth = firebase.auth();
-      storage = firebase.storage();
-      db = firebase.firestore();
-      statusEl.textContent = 'Conectando ao Firebase...';
-      // anonymous sign in
-      auth.onAuthStateChanged(user => {
-        if (!user) {
-          auth.signInAnonymously().catch(err => {
-            statusEl.textContent = 'Erro auth';
-            console.error(err);
-          });
-        } else {
-          statusEl.textContent = 'Conectado (anônimo)';
-        }
-      });
-    } catch (e) {
-      console.error('Erro inicializando Firebase:', e);
-      statusEl.textContent = 'Erro Firebase';
-    }
-  } else {
-    statusEl.textContent = 'Modo local (sem Firebase) — substitua firebaseConfig para salvar online';
-  }
-
-  // Helpers
-  function clearPreview(){
-    selectedFiles = [];
-    previewArea.innerHTML = '';
-    previewArea.style.display = 'none';
-    uploadMsg.textContent = '';
-    progressWrap.style.display = 'none';
-    progressBar.style.width = '0%';
-    titleInput.value = '';
-    descInput.value = '';
-    tagsInput.value = '';
-  }
-
-  function createThumb(file, idx){
-    const url = URL.createObjectURL(file);
-    const div = document.createElement('div');
-    div.className = 'thumb';
-    div.dataset.idx = idx;
-    div.innerHTML = `
-      <img src="${url}" style="max-width:100%;max-height:120px;display:block;border-radius:8px;object-fit:cover" />
-    `;
-    return div;
-  }
-
-  // Drag & drop
-  ['dragenter','dragover'].forEach(evt=>{
-    dropzone.addEventListener(evt, e=>{
-      e.preventDefault(); e.stopPropagation();
-      dropzone.classList.add('dragover');
+    // tema
+    themeToggle.addEventListener('click', () => {
+      const current = document.body.getAttribute('data-theme');
+      document.body.setAttribute('data-theme', current === 'light' ? 'dark' : 'light');
     });
-  });
-  ['dragleave','drop'].forEach(evt=>{
-    dropzone.addEventListener(evt, e=>{
-      e.preventDefault(); e.stopPropagation();
-      dropzone.classList.remove('dragover');
+
+    // arrastar/soltar
+    uploadArea.addEventListener('click', () => fileInput.click());
+    uploadArea.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      uploadArea.style.borderColor = "#00ffcc";
     });
-  });
-  dropzone.addEventListener('click', ()=> fileInput.click());
-  dropzone.addEventListener('drop', (e)=>{
-    const dt = e.dataTransfer;
-    handleFiles(Array.from(dt.files));
-  });
-  fileInput.addEventListener('change', (e)=> handleFiles(Array.from(e.target.files)));
-
-  // keyboard: Esc clears
-  window.addEventListener('keydown', e=>{
-    if (e.key === 'Escape') {
-      clearPreview();
-      fileInput.value = '';
-    }
-  });
-
-  function handleFiles(files){
-    const images = files.filter(f => f.type && f.type.startsWith('image/'));
-    if (images.length === 0) {
-      uploadMsg.textContent = 'Nenhuma imagem detectada.';
-      return;
-    }
-    // limit size (for UI) - no hard block but warn
-    images.forEach((f,i)=> {
-      if (f.size > 10 * 1024 * 1024) {
-        uploadMsg.textContent = 'Arquivos maiores que 10MB podem demorar; considere reduzir o tamanho.';
-      }
-      selectedFiles.push(f);
-      previewArea.appendChild(createThumb(f, selectedFiles.length-1));
+    uploadArea.addEventListener('dragleave', () => {
+      uploadArea.style.borderColor = "";
     });
-    previewArea.style.display = 'grid';
-  }
+    uploadArea.addEventListener('drop', (e) => {
+      e.preventDefault();
+      uploadArea.style.borderColor = "";
+      handleFiles(e.dataTransfer.files);
+    });
+    fileInput.addEventListener('change', (e) => handleFiles(e.target.files));
 
-  // Upload handler
-  uploadBtn.addEventListener('click', async ()=>{
-    if (selectedFiles.length === 0) {
-      uploadMsg.textContent = 'Selecione ao menos uma imagem.';
-      return;
-    }
-    uploadBtn.disabled = true;
-    uploadMsg.textContent = '';
-    progressWrap.style.display = 'block';
-    progressBar.style.width = '0%';
-
-    try {
-      for (let i=0;i<selectedFiles.length;i++){
-        const file = selectedFiles[i];
-        const meta = {
-          title: titleInput.value || '',
-          description: descInput.value || '',
-          tags: tagsInput.value ? tagsInput.value.split(',').map(t=>t.trim()).filter(Boolean) : [],
-          createdAt: new Date().toISOString(),
-          size: file.size,
-          mime: file.type,
-          public: publicCheckbox.checked
+    function handleFiles(files) {
+      [...files].forEach(file => {
+        if (!file.type.startsWith('image/')) return;
+        const reader = new FileReader();
+        reader.onload = e => {
+          addImage(e.target.result);
         };
-
-        if (useFirebase && storage && db) {
-          // smart filename: timestamp + random
-          const fileName = `images/${Date.now()}_${Math.random().toString(36).slice(2,9)}_${file.name.replace(/\s+/g,'_')}`;
-          const uploadTask = storage.ref(fileName).put(file);
-          await new Promise((resolve, reject) => {
-            uploadTask.on('state_changed', snapshot => {
-              const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-              progressBar.style.width = `${progress}%`;
-            }, err => {
-              console.error('Upload erro', err); reject(err);
-            }, async () => {
-              const downloadURL = await uploadTask.snapshot.ref.getDownloadURL();
-              meta.url = downloadURL;
-              meta.path = fileName;
-              // save metadata in Firestore
-              await db.collection('images').add(meta);
-              resolve();
-            });
-          });
-        } else {
-          // fallback: store base64 in localStorage (limited, for demo)
-          const dataUrl = await fileToDataURL(file);
-          meta.url = dataUrl;
-          meta.local = true;
-          lsSaveImageMeta(meta);
-          // show progress artificially
-          progressBar.style.width = `${((i+1)/selectedFiles.length)*100}%`;
-        }
-      }
-
-      uploadMsg.textContent = 'Upload concluído!';
-      clearPreview();
-      fileInput.value = '';
-      loadGallery(); // refresh
-    } catch (e) {
-      console.error(e);
-      uploadMsg.textContent = 'Erro no upload. Veja o console.';
-    } finally {
-      uploadBtn.disabled = false;
-      setTimeout(()=>{ progressWrap.style.display = 'none'; progressBar.style.width='0%' }, 1200);
-    }
-  });
-
-  function fileToDataURL(file){
-    return new Promise((res, rej)=>{
-      const fr = new FileReader();
-      fr.onload = ()=>res(fr.result);
-      fr.onerror = rej;
-      fr.readAsDataURL(file);
-    });
-  }
-
-  // Load gallery (FireStore or local)
-  async function loadGallery(){
-    galleryEl.innerHTML = '<div class="empty">Carregando galeria...</div>';
-    try {
-      if (useFirebase && db) {
-        // query latest 50
-        const q = await db.collection('images').orderBy('createdAt','desc').limit(50).get();
-        const docs = q.docs.map(d => ({ id: d.id, ...d.data() }));
-        renderGallery(docs);
-      } else {
-        const arr = lsLoadGallery();
-        renderGallery(arr);
-      }
-    } catch (e) {
-      console.error('Erro carregando galeria:', e);
-      galleryEl.innerHTML = `<div class="empty">Erro ao carregar galeria. Veja console.</div>`;
-    }
-  }
-
-  function renderGallery(items){
-    if (!items || items.length === 0) {
-      galleryEl.innerHTML = `<div class="empty">Nenhuma imagem ainda — seja o primeiro a enviar!</div>`;
-      return;
-    }
-    galleryEl.innerHTML = '';
-    items.forEach(item=>{
-      const card = document.createElement('article');
-      card.className = 'card';
-      const media = document.createElement('img');
-      media.className = 'media';
-      media.alt = item.title || 'Imagem pública';
-      media.src = item.url;
-      // graceful fallback for heavy images
-      media.loading = 'lazy';
-
-      const meta = document.createElement('div');
-      meta.className = 'meta';
-      const h3 = document.createElement('h3');
-      h3.textContent = item.title || (item.tags && item.tags.join(', ')) || 'Sem título';
-      const p = document.createElement('div');
-      p.className = 'muted small';
-      p.textContent = (item.description && item.description.length>120) ? item.description.slice(0,120)+'…' : (item.description || '');
-      const tags = document.createElement('div');
-      tags.className = 'tags';
-      (item.tags || []).slice(0,6).forEach(t=>{
-        const span = document.createElement('span'); span.className = 'tag'; span.textContent = t; tags.appendChild(span);
+        reader.readAsDataURL(file);
       });
-      const time = document.createElement('div'); time.className = 'muted small';
-      try {
-        time.textContent = new Date(item.createdAt).toLocaleString();
-      } catch(e){ time.textContent = item.createdAt || '' }
+    }
 
-      const linkRow = document.createElement('div');
-      linkRow.style.display = 'flex'; linkRow.style.justifyContent='space-between'; linkRow.style.alignItems='center';
-      const viewLink = document.createElement('a');
-      viewLink.className = 'link';
-      viewLink.href = item.url;
-      viewLink.target = '_blank';
-      viewLink.rel = 'noopener';
-      viewLink.textContent = 'Abrir';
-      const shareBtn = document.createElement('button');
-      shareBtn.className = 'btn';
-      shareBtn.textContent = 'Compartilhar';
-      shareBtn.addEventListener('click', async ()=>{
-        try {
-          await navigat
+    function addImage(src) {
+      const div = document.createElement('div');
+      div.classList.add('img-card');
+      div.innerHTML = `<img src=\"${src}\" alt=\"Imagem enviada\">`;
+      gallery.prepend(div);
+      emptyMsg.style.display = 'none';
+      saveImages();
+    }
+
+    // salvar localmente (localStorage)
+    function saveImages() {
+      const imgs = [...gallery.querySelectorAll('img')].map(img => img.src);
+      localStorage.setItem('galeria', JSON.stringify(imgs));
+    }
+
+    function loadImages() {
+      const imgs = JSON.parse(localStorage.getItem('galeria') || '[]');
+      imgs.forEach(src => addImage(src));
+      if (imgs.length > 0) emptyMsg.style.display = 'none';
+    }
+
+    loadImages();
+  </script>
+</body>
+</html>
